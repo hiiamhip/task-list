@@ -10,7 +10,7 @@ Route::get('/', function () {
 });
 
 Route::get('/tasks', function () {
-    return view('index', ['tasks' => Task::all()]);
+    return view('index', ['tasks' => Task::latest()->paginate()]);
 })->name('tasks.index');
 
 Route::view('/tasks/create', 'create')->name('tasks.create');
@@ -37,4 +37,9 @@ Route::delete('/tasks/{task}', function (Task $task) {
     $task->delete();
     return redirect()->route('tasks.index')->with('success', 'Task deleted successfully');
 })->name('tasks.destroy');
+
+Route::put('/tasks/{task}/toggle-complete', function (Task $task) {
+    $task->toggleComplete();
+    return redirect()->back()->with('success', 'Task updated successfully');
+})->name('tasks.toggle-complete');
 
